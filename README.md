@@ -54,17 +54,17 @@ A Cloud Security Personal Project that includes Cloud Security, WAF, and BOT Pro
                                    └───────────────┬───────────────┘
                                                    │
                                                    ▼
-┌──────────────────────────────────────────────────┴───────────────────────────────────────────────────┐ 
-|                                        StarDefense Perimeter                                         │
-|  ┌──────────────────────────┐    ┌───────────────────────────────┐  ┌─────────────────────────────┐  |
-|  │      LogParser Module    │    │   AttackSignatureDetector     │  │   Future: Bot Detector      │  |
-|  │ (src/LogParser/)         │    │ (src/AttackSignatureDetector/)│  │ - unknown                   │  |
-|  │ - Normalize requests     │ -> │ - Pattern matching (OWASP)    │  │                             │  |
-|  │ - Extract ALL HTTP fields│    │ - Block/Allow Decisions       │  │                             │  |
-|  | - Standardize Log format |    | - Keyword / regex signatures  |  |                             |  |
-|  └──────────────────────────┘    └───────────────────────────────┘  └─────────────────────────────┘  |
-|                                                                                                      |
-└──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┴──────────────────────────────────────────────────┐ 
+|                                        StarDefense Perimeter                                        │
+|  ┌──────────────────────────┐    ┌───────────────────────────────┐    ┌──────────────────────────┐  |
+|  │      LogParser Module    │    │   AttackSignatureDetector     │    │   Future: Bot Detector   │  |
+|  │ (src/LogParser/)         │    │ (src/AttackSignatureDetector/)│    │ - unknown                │  |
+|  │ - Normalize requests     │ -▶ │ - Pattern matching (OWASP)    │ -▶ │                          │  |
+|  │ - Extract ALL HTTP fields│    │ - Block/Allow Decisions       │    │                          │  |
+|  | - Standardize Log format |    | - Keyword / regex signatures  |    |                          |  |
+|  └──────────────────────────┘    └───────────────────────────────┘    └──────────────────────────┘  |
+|                                                                                                     |
+└─────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                                    │
                                                    ▼
                                     ┌───────────────────────────────┐
