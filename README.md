@@ -1,5 +1,5 @@
 # StarDefense Perimeter
-a Cloud Security Peronal Project that includes Cloud Security, WAF and BOT Protection
+A Cloud Security Personal Project that includes Cloud Security, WAF, and BOT Protection
 
 
 ## The Entire "IDEA"
@@ -15,11 +15,11 @@ a Cloud Security Peronal Project that includes Cloud Security, WAF and BOT Prote
 ## How to Run StarDefense Backend Server
 
 
-## How to Execure The PreDefined Script
+## How to Execute the Predefined Script
 
 
 ## Attack Signature Detector
-- We will be creating a list of detecting signature, starting with just The OWASP Top 10:2025
+- We will be creating a list of detection signatures, starting with just the OWASP Top 10:2025
     - A01:2025 - Broken Access Control
     - A02:2025 - Security Misconfiguration
     - A03:2025 - Software Supply Chain Failures
@@ -32,18 +32,19 @@ a Cloud Security Peronal Project that includes Cloud Security, WAF and BOT Prote
     - A10:2025 - Mishandling of Exceptional Conditions
 
 ## BackEnd Server APIs
-- We will be defining all the APIs using the Python Framework FastApi. Below are the started APIs we will be implementing
+- We will be defining all the APIs using the Python Framework FastAPI. Below are the started APIs we will be implementing
     - /login
     - /forgot-pasword
     - /application-submit
 
 ## The LogParser - WAF Layer
-- This later will essentially sit infront of the backend fastAPI Server, it purpose will be to intercept all of the traffic going into the Backend Server, and log it out, everything will be in monitoring mode for now and we will flag it if potentially it can be DENY / Block base on the signature provided by the Attack Signature Detector Feature. 
+- This later will essentially sit in front of the backend FastAPI Server; its purpose will be to intercept all of the traffic going into the Backend Server and log it. Everything will be in monitoring mode for now, and we will flag it if potentially it can be DENY / Block based on the signature provided by the Attack Signature Detector Feature. 
 
 ## FrontEnd
 
 
 ## Architecture Network Diagram
+```
                                    ┌───────────────────────────────┐
                                    │        WEB FrontEnd App       │
                                    │(HTTP/s Layer 7 Traffic events)│
@@ -54,7 +55,7 @@ a Cloud Security Peronal Project that includes Cloud Security, WAF and BOT Prote
                                                    │
                                                    ▼
 ┌──────────────────────────────────────────────────┴───────────────────────────────────────────────────┐ 
-|                                        StarDefense Perimeter                                         |
+|                                        StarDefense Perimeter                                         │
 |  ┌──────────────────────────┐    ┌───────────────────────────────┐  ┌─────────────────────────────┐  |
 |  │      LogParser Module    │    │   AttackSignatureDetector     │  │   Future: Bot Detector      │  |
 |  │ (src/LogParser/)         │    │ (src/AttackSignatureDetector/)│  │ - unknown                   │  |
@@ -81,3 +82,4 @@ a Cloud Security Peronal Project that includes Cloud Security, WAF and BOT Prote
                                     │ - Export to Dashboard/SEIM    │
                                     │ - Bot Detection Modules       │
                                     └───────────────────────────────┘
+```
