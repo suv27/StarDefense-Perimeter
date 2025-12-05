@@ -48,9 +48,7 @@ A Cloud Security Personal Project that includes Cloud Security, WAF, and BOT Pro
                                    ┌───────────────────────────────┐
                                    │        WEB FrontEnd App       │
                                    │(HTTP/s Layer 7 Traffic events)│
-                                   │ - /login                      │
-                                   │ - /forgot-password            │
-                                   │ - /application-submit         │
+                                   | - UI/UX for the FrontEnd      |
                                    └───────────────┬───────────────┘
                                                    │
                                                    ▼
@@ -67,19 +65,22 @@ A Cloud Security Personal Project that includes Cloud Security, WAF, and BOT Pro
 └─────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                                    │
                                                    ▼
-                                    ┌───────────────────────────────┐
-                                    │      FastAPI Backend APIs     │
-                                    │ (src/APIs/backendApis.py)     │
-                                    │ - /parse-logs                 │
-                                    │ - /detect-attack              │
-                                    │ - /stats                      │
-                                    └───────────────┬───────────────┘
-                                                    │ responses (JSON)
-                                                    ▼
-                                    ┌───────────────────────────────┐
-                                    │  Client / FrontEnd Dashboard  │
-                                    │ - Dashboard UI/UX FrontEnd    │
-                                    │ - Export to Dashboard/SEIM    │
-                                    │ - Bot Detection Modules       │
-                                    └───────────────────────────────┘
+                                   ┌───────────────────────────────┐
+                                   │      FastAPI Backend APIs     │
+                                   │ (src/APIs/backendApis.py)     │
+                                   │ - /parse-logs                 │
+                                   │ - /detect-attack              │
+                                   │ - /stats                      │
+                                   │ - /login                      │
+                                   │ - /forgot-password            │
+                                   │ - /application-submit         │
+                                   └───────────────┬───────────────┘
+                                                   │ responses (JSON)
+                                                   ▼
+                                   ┌───────────────────────────────┐
+                                   │  Client / FrontEnd Dashboard  │
+                                   │ - Dashboard UI/UX FrontEnd    │
+                                   │ - Export to Dashboard/SEIM    │
+                                   │ - Bot Detection Modules       │
+                                   └───────────────────────────────┘
 ```
