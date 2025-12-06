@@ -13,7 +13,22 @@ A Cloud Security Personal Project that includes Cloud Security, WAF, and BOT Pro
 
 
 ## How to Run StarDefense Backend Server
-
+- Run 'fastapi dev src/APIs/backendApis.py' on your local Terminal
+- Once the server is running, from the browser or Postman, run the following:
+- Browser:
+    - http://127.0.0.1:8000/docs
+- Postman / Curl Command
+```
+curl --location 'http://127.0.0.1:8000/login' \
+--header 'User-Agent: Postman Runtime UA' \
+--header 'Accept: Application/json;v=1' \
+--header 'Host: XXX-HOSTNAME-XXX Test Hostname' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "XXXXXXXXX",
+    "password": "XXXXXXXXX"
+}'
+```
 
 ## How to Execute the Predefined Script
 
