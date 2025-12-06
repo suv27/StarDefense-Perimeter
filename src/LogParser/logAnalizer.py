@@ -1,4 +1,6 @@
 import logging
+import json
+import os
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -9,8 +11,7 @@ class LogAnalizer:
     
     async def extractAllHTTPDetails(self):
         logger.info("/extractAllHTTPDetails Method Initiated")
-        # Extract all HTTP details from the log message
-        
+
         payload = {
             "method": self.httpRequestData.method,
             "url": str(self.httpRequestData.url),
@@ -64,25 +65,30 @@ class LogAnalizer:
             "x_amzn_trace_id": self.httpRequestData.headers.get("x-amzn-trace-id"),
             "cf_connecting_ip": self.httpRequestData.headers.get("cf-connecting-ip"),
             "true_client_ip": self.httpRequestData.headers.get("true-client-ip"),
-            "body": await self.httpRequestData.body(),
             "body_size": len(await self.httpRequestData.body()),
+            "body": (json.loads((await self.httpRequestData.body()).decode("utf-8")))
         }
 
-        logger.info(payload)
+        # parsedPayload = self.parseTraffic(payload)
+        self.logPayload(payload)
         return payload
 
 
-
-    def parseTraffic(self):
+    def parseTraffic(self, payload):
         # catch all the details of the HTTP Traffic
         # TODO: implement the logic to parse HTTP traffic extractAllHTTPDetails(self):
-
         pass
         
 
-    def parseErrors(self):
-        # catch all the error details from the logs
-        # TODO: implement the logic to parse errors from self.message
-        pass
+    def logPayload(self, parsedPayload):
+        # log the payload details into a file in a correct format for future dashboard on the frontend UI
 
-    
+        try:
+            filename = "http_events_log.txt"
+
+            with open(filename, "a", encoding="utf-8") as log_file:
+                json.dump(parsedPayload, log_file, ensure_ascii=False)
+                log_file.write("\n")
+        except Exception:
+            logger.exception("Failed to write http event to log file")
+        
