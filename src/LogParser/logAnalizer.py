@@ -11,8 +11,6 @@ class LogAnalizer:
         logger.info("/extractAllHTTPDetails Method Initiated")
         # Extract all HTTP details from the log message
         
-        # read body once
-        body_bytes = await self.httpRequestData.body()
         payload = {
             "method": self.httpRequestData.method,
             "url": str(self.httpRequestData.url),
@@ -42,9 +40,6 @@ class LogAnalizer:
             "x_forwarded_for": self.httpRequestData.headers.get("x-forwarded-for"),
             "x_forwarded_proto": self.httpRequestData.headers.get("x-forwarded-proto", None),
             "x_real_ip": self.httpRequestData.headers.get("x-real-ip"),
-            "body": body_bytes,
-            "body_size": len(body_bytes),
-            # additional useful headers for security inspection
             "accept_encoding": self.httpRequestData.headers.get("accept-encoding"),
             "accept_language": self.httpRequestData.headers.get("accept-language"),
             "cache_control": self.httpRequestData.headers.get("cache-control"),
@@ -62,12 +57,15 @@ class LogAnalizer:
             "upgrade_insecure_requests": self.httpRequestData.headers.get("upgrade-insecure-requests"),
             "via": self.httpRequestData.headers.get("via"),
             "forwarded": self.httpRequestData.headers.get("forwarded"),
-            "x_request_id": self.httpRequestData.headers.get("x-request-id") or self.httpRequestData.headers.get("x_correlation_id"),
+            "x_request_id": self.httpRequestData.headers.get("x-request-id"),
+            "x_correlation_id": self.httpRequestData.headers.get("x_correlation_id"),
             "traceparent": self.httpRequestData.headers.get("traceparent"),
             "tracestate": self.httpRequestData.headers.get("tracestate"),
             "x_amzn_trace_id": self.httpRequestData.headers.get("x-amzn-trace-id"),
             "cf_connecting_ip": self.httpRequestData.headers.get("cf-connecting-ip"),
             "true_client_ip": self.httpRequestData.headers.get("true-client-ip"),
+            "body": await self.httpRequestData.body(),
+            "body_size": len(await self.httpRequestData.body()),
         }
 
         logger.info(payload)
