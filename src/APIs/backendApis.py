@@ -19,13 +19,17 @@ except Exception:
 app = FastAPI()
 logger.info("/backendApis Module Initiated")
 
-
 @app.get("/status")
-def get_status():
+async def get_status(statusRequest: Request):
     logger.info("/status API endpoint called")
+    
+    logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=statusRequest)
+    # statusGetData = await logAnalizerInstance.extractAllHTTPDetails()
+    
     return {
         "message": "/status API is running successfully",
         "status_code": 200
+        # "httpData": statusGetData
     }
 
 @app.post("/login")

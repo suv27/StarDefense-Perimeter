@@ -91,4 +91,4 @@ class LogAnalizer:
                 log_file.write("\n")
         except Exception:
             logger.exception("Failed to write http event to log file")
-        
+
