@@ -24,7 +24,7 @@ async def get_status(statusRequest: Request):
     logger.info("/status API endpoint called")
     
     logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=statusRequest)
-    # statusGetData = await logAnalizerInstance.extractAllHTTPDetails()
+    # statusGetData = await logAnalizerInstance.extractAllHTTPPostData()
     
     return {
         "message": "/status API is running successfully",
@@ -37,9 +37,9 @@ async def login(loginRequest: Request):
     logger.info("/login API endpoint called")
 
     logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=loginRequest)
-    loginPostData = await logAnalizerInstance.extractAllHTTPDetails()
+    loginPostData = await logAnalizerInstance.extractAllHTTPPostData()
 
-    return {"message": "/login API is running successfully", "status_code": 200, "httpData": loginPostData}
+    return {"message": "/login API is running successfully", "status_code": 200}
     
 
 

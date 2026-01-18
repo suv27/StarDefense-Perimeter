@@ -9,8 +9,8 @@ class LogAnalizer:
         logger.info("/LogAnalizer Class Initiated")
         self.httpRequestData = httpRequestData
     
-    async def extractAllHTTPDetails(self):
-        logger.info("/extractAllHTTPDetails Method Initiated")
+    async def extractAllHTTPPostData(self):
+        logger.info("/extractAllHTTPPostData Method Initiated")
 
         payload = {
             "method": self.httpRequestData.method,
@@ -76,7 +76,7 @@ class LogAnalizer:
 
     def parseTraffic(self, payload):
         # catch all the details of the HTTP Traffic
-        # TODO: implement the logic to parse HTTP traffic extractAllHTTPDetails(self):
+        # TODO: implement the logic to parse HTTP traffic extractAllHTTPPostData(self):
         pass
         
 
