@@ -3,6 +3,7 @@ import logging
 import logging.config
 import sys
 import src.LogParser.logAnalizer as logAnalizer
+from src.waf.waf_engine import WAFEngine
 import base64
 import json
 
@@ -15,9 +16,10 @@ except Exception:
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
 
 
-
 app = FastAPI()
+waf = WAFEngine()
 logger.info("/backendApis Module Initiated")
+
 
 @app.get("/status")
 async def get_status(statusRequest: Request):
@@ -39,7 +41,20 @@ async def login(loginRequest: Request):
     logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=loginRequest)
     loginPostData = await logAnalizerInstance.extractAllHTTPPostData()
 
-    return {"message": "/login API is running successfully", "status_code": 200}
+    waf_decision = waf.evaluate(loginPostData)
+
+    if waf_decision["action"] == "BLOCK":
+        return {
+            "status_code": 403,
+            "message": "Request blocked by WAF",
+            "waf": waf_decision
+        }
+
+    return {
+        "status_code": 200,
+        "waf": waf_decision,
+        "message": "/login API is running successfully"
+    }
     
 
 
