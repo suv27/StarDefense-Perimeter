@@ -106,6 +106,7 @@ def run_tests():
             print(f"   HTTP Status: {response.status_code}")
             print(f"   WAF Score: {waf_info.get('confidence', {})}")
             print(f"   Severity: {waf_info.get('primary_rule', {}).get('severity')}")
+            print(f"   Response: {json.loads(response.text)['message']}")
 
             if waf_info:
                 print(f"   Rule Triggered: {waf_info.get('primary_rule', {}).get('rule_id')}")
