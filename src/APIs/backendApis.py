@@ -1,11 +1,10 @@
 from fastapi import FastAPI, Request
+from src.waf.waf_engine import WAFEngine
+from fastapi.responses import JSONResponse
+import src.LogParser.logAnalizer as logAnalizer
 import logging
 import logging.config
 import sys
-import src.LogParser.logAnalizer as logAnalizer
-from src.waf.waf_engine import WAFEngine
-import base64
-import json
 
 
 try:
@@ -18,52 +17,53 @@ except Exception:
 
 app = FastAPI()
 waf = WAFEngine()
-logger.info("/backendApis Module Initiated")
 
+
+@app.middleware("http")
+async def waf_middleware(wafMiddlewareRequest: Request, call_next):
+    logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=wafMiddlewareRequest)
+    request_payload = await logAnalizerInstance.extractAllHTTPPostData()
+    waf_decision = waf.evaluate(request_payload)
+
+    logger.info(f"/WAFEngine Decision: {waf_decision['action']}")
+
+    if waf_decision["action"] == "BLOCK":
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": "Request blocked by WAF",
+                "waf": waf_decision
+            }
+        )
+
+    # Attach decision for downstream use (optional but powerful)
+    wafMiddlewareRequest.state.waf = waf_decision
+
+    return await call_next(wafMiddlewareRequest)
 
 @app.get("/status")
 async def get_status(statusRequest: Request):
     logger.info("/status API endpoint called")
     
-    logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=statusRequest)
-    # statusGetData = await logAnalizerInstance.extractAllHTTPPostData()
-    
     return {
         "message": "/status API is running successfully",
         "status_code": 200
-        # "httpData": statusGetData
     }
 
 @app.post("/login")
-async def login(loginRequest: Request):
+async def login(request: Request):
     logger.info("/login API endpoint called")
-
-    logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=loginRequest)
-    loginPostData = await logAnalizerInstance.extractAllHTTPPostData()
-
-    waf_decision = waf.evaluate(loginPostData)
-
-    if waf_decision["action"] == "BLOCK":
-        return {
-            "status_code": 403,
-            "message": "Request blocked by WAF",
-            "waf": waf_decision
-        }
 
     return {
         "status_code": 200,
-        "waf": waf_decision,
-        "message": "/login API is running successfully"
+        "message": "/login API is running successfully",
+        "waf": request.state.waf
     }
-    
-
 
 
 # TODO: Future - Implement Authentication and Authorization for APIs
 # TODO: Future - Implement detailed error handling and logging
-# If you want, next we can:
-
-# Design the WAF rule engine
-# Implement FastAPI middleware
-# Add attack classification
-# Or shape this into a portfolio-ready README
+# TODO: Design the WAF rule engine
+# TODO: Implement FastAPI middleware
+# TODO: Add attack classification
+# TODO: Or shape this into a portfolio-ready README
