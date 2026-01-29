@@ -46,4 +46,9 @@ async def login(loginRequest: Request):
 
 # TODO: Future - Implement Authentication and Authorization for APIs
 # TODO: Future - Implement detailed error handling and logging
-# 
+# If you want, next we can:
+
+# Design the WAF rule engine
+# Implement FastAPI middleware
+# Add attack classification
+# Or shape this into a portfolio-ready README
