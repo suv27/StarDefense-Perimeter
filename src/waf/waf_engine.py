@@ -83,7 +83,6 @@ class WAFEngine:
         """
         Safely extract values from normalized HTTP payload
         """
-        logger.info("/WAFEngine.extract_target_value Extracting Target Value for WAF Check")
         if target == "body":
             return payload.get("body")
 
@@ -111,7 +110,6 @@ class WAFEngine:
 
         severity_order = {"LOW": 1, "MEDIUM": 2, "HIGH": 3}
         highest = max(matches, key=lambda x: severity_order[x["severity"]])
-        logger.info(highest)
 
         action = "BLOCK" if highest["severity"] == "HIGH" else "FLAG"
 
