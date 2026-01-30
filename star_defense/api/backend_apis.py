@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Request
-from src.waf.waf_engine import WAFEngine
-from fastapi.responses import JSONResponse
-import src.LogParser.logAnalizer as logAnalizer
+
+import sys
 import logging
 import logging.config
-import sys
+# import star_defense.logparser.log_analizer as LogAnalizer
+from star_defense.logparser.log_analizer import LogAnalizer
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from star_defense.waf.engine import WAFEngine
+
 
 
 try:
@@ -20,8 +23,8 @@ waf = WAFEngine()
 
 
 @app.middleware("http")
-async def waf_middleware(wafMiddlewareRequest: Request, call_next):
-    logAnalizerInstance = logAnalizer.LogAnalizer(httpRequestData=wafMiddlewareRequest)
+async def waf_middleware(wafMiddlewareRequest: Request, call_next):    
+    logAnalizerInstance = LogAnalizer(httpRequestData=wafMiddlewareRequest)
     request_payload = await logAnalizerInstance.extractAllHTTPPostData()
     waf_decision = waf.evaluate(request_payload)
 
