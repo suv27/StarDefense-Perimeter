@@ -187,9 +187,9 @@ This simulates **enterprise-grade security testing pipelines** commonly used in 
 
 ## Architecture Diagram
 ```bash
-Client / Frontend
-        |
-        v
+         Client / Frontend
+                |
+                v
 ┌───────────────────────────────┐
 │     Bot Protection Layer      │
 │ - Telemetry Extraction        │
