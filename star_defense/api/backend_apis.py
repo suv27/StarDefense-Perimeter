@@ -2,11 +2,11 @@
 import sys
 import logging
 import logging.config
-# import star_defense.logparser.log_analizer as LogAnalizer
 from star_defense.logparser.log_analizer import LogAnalizer
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from star_defense.waf.engine import WAFEngine
+from star_defense.bot_protection.telemetry import TelemetryExtractor
 
 
 
@@ -20,6 +20,27 @@ except Exception:
 
 app = FastAPI()
 waf = WAFEngine()
+
+@app.middleware("http")
+async def bot_protection_middleware(request: Request, call_next):
+    # 1. Get the raw data from your extractor
+    telemetry = await TelemetryExtractor.extract(request)
+    
+    # 2. DECIDE if it's a bot (Logic missing previously)
+    user_agent = telemetry.get("user_agent", "").lower()
+    
+    # Simple rule: if UA is missing or is "curl", it's a bot
+    is_bot = not user_agent or "curl" in user_agent
+    
+    # 3. ATTACH the key so it exists for the 'if' statement
+    telemetry["is_bot"] = is_bot
+    request.state.bot = telemetry
+
+    # 4. Now this check will work!
+    if telemetry["is_bot"]:
+        return JSONResponse(status_code=403, content={"message": "Bot blocked"})
+
+    return await call_next(request)
 
 
 @app.middleware("http")
