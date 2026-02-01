@@ -86,7 +86,7 @@ star_defense/
 │   ├── test_cases.py            # Legit and malicious test cases
 │   └── run_security_tests.py    # Automated security tests
 │
-├── http_events_log.txt          # Structured HTTP security logs
+├── http_events_log.jsonl          # Structured HTTP security logs
 ├── requirements.txt
 ├── LICENSE
 └── README.md

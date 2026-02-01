@@ -33,7 +33,7 @@ MANIFEST
 *.spec
 
 # Installer logs
-http_events_log.txt
+http_events_log.jsonl
 pip-log.txt
 pip-delete-this-directory.txt
 

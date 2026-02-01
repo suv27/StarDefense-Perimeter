@@ -3,11 +3,10 @@
 import json
 import time
 import requests
-import star_defense.tests.test_cases as testcases
+import star_defense.tests.security_scenarios as testcases
 
 BASE_URL = "http://127.0.0.1:8000/login"
 
-# 1. Defined Bot Test Cases
 BOT_TESTS = [
     {
         "name": "Bot Check: Legit Browser",
@@ -29,58 +28,46 @@ BOT_TESTS = [
     }
 ]
 
-def print_result(name, response, expected=None):
-    """Helper to format the output consistently"""
+def print_result(name, response, expected_status):
+    """Refined helper to validate security expectations"""
     try:
         data = response.json()
     except:
         data = {"message": response.text}
 
-    # Determine status icon
-    if response.status_code == 403:
-        status_icon = "🚫 BLOCKED"
-    elif response.status_code == 200:
-        status_icon = "✅ ALLOWED"
-    else:
-        status_icon = f"❓ STATUS {response.status_code}"
+    actual_status = response.status_code
+    # A test 'Passes' if the actual status matches what we expected (e.g., 403 for a bot)
+    test_passed = (actual_status == expected_status)
+    result_icon = "✅ PASS" if test_passed else "❌ FAIL"
 
-    print(f"🔹 {name}")
-    print(f"   Result:      {status_icon}")
-    print(f"   Message:     {data.get('message') or data.get('detail')}")
+    print(f"🔹 {name} -> {result_icon}")
+    print(f"   Status: {actual_status} (Expected: {expected_status})")
+    print(f"   Message: {data.get('message') or data.get('detail')}")
     
-    # If WAF info exists, show it
     if "waf" in data:
         waf = data["waf"]
-        print(f"   WAF Score:   {waf.get('confidence')}")
-        print(f"   Rule ID:     {waf.get('primary_rule', {}).get('rule_id')}")
-    
+        print(f"   WAF Rule: {waf.get('primary_rule', {}).get('rule_id')} (Confidence: {waf.get('confidence')})")
     print("-" * 50)
 
 def run_security_suite():
     print("\n🛡️  StarDefense Combined Security Suite Starting...\n")
+    
     print("=" * 50)
-    print("STAGE 1: BOT PROTECTION TESTS")
-    print("=" * 50)
-
+    print("STAGE 1: BOT PROTECTION")
     for test in BOT_TESTS:
-        try:
-            r = requests.post(BASE_URL, json=test["payload"], headers=test["headers"], timeout=5)
-            print_result(test["name"], r)
-        except Exception as e:
-            print(f"❌ Connection Error: {e}")
+        r = requests.post(BASE_URL, json=test["payload"], headers=test["headers"])
+        print_result(test["name"], r, test["expect_status"])
 
-    print("\n" + "=" * 50)
-    print("STAGE 2: WAF ATTACK TESTS (Loaded from test_cases.py)")
     print("=" * 50)
-
+    print("STAGE 2: WAF ATTACK TESTS")
     for test in testcases.TestCases.load_test_cases():
-        try:
-            # We use json.dumps for the payload to match your previous WAF test style
-            r = requests.post(BASE_URL, headers=test["headers"], data=json.dumps(test["payload"]), timeout=5)
-            print_result(test["name"], r)
-        except Exception as e:
-            print(f"❌ Connection Error: {e}")
-        time.sleep(0.3)
+        # Determine expected status: Malicious cases should be 403, Legit should be 200
+        # We look at the 'intent' if it exists, otherwise default to 403 for attacks
+        expected = 200 if "Legit" in test["name"] else 403
+        
+        r = requests.post(BASE_URL, headers=test["headers"], data=json.dumps(test["payload"]))
+        print_result(test["name"], r, expected)
+        time.sleep(0.1)
 
     print("\n✅ All Security Tests Completed\n")
 
