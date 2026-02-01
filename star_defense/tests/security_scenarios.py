@@ -2,7 +2,30 @@
 
 class TestCases:
     @staticmethod
-    def load_test_cases():
+    def load_bot_test_cases():
+        return [
+            {
+                "name": "Bot Check: Legit Browser",
+                "headers": {"User-Agent": "Mozilla/5.0", "Content-Type": "application/json"},
+                "payload": {"username": "user", "password": "pass"},
+                "expect_status": 200
+            },
+            {
+                "name": "Bot Check: No User Agent",
+                "headers": {"Content-Type": "application/json"},
+                "payload": {"username": "bot", "password": "bot"},
+                "expect_status": 403
+            },
+            {
+                "name": "Bot Check: Curl User Agent",
+                "headers": {"User-Agent": "curl/7.68.0", "Content-Type": "application/json"},
+                "payload": {"username": "bot", "password": "bot"},
+                "expect_status": 403
+            }
+        ]
+    
+    @staticmethod
+    def load_waf_test_cases():
         default_headers = {
             "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) StarDefense/1.1"
