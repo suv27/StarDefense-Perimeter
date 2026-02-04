@@ -61,39 +61,36 @@ If the request is blocked, the server will return 403 Forbidden along with WAF o
 
 ### Project Structure
 ```bash
-starshell_core/
-├── api/
-│   └── backend_apis.py          # FastAPI application entry point
-│
-├── bot/
-│   ├── middleware.py            # Bot protection middleware
-│   ├── telemetry.py             # Request telemetry extraction
-│   ├── fingerprint.py           # (Planned) client fingerprinting
-│   ├── scoring.py               # (Planned) bot scoring engine
-│   ├── decision.py              # (Planned) enforcement logic
-│   └── response.py              # (Planned) bot responses
-│
-├── waf/
-│   └── engine.py                # WAF rule engine & evaluation
+STARDEFENSE-PERIMETER
+├── starshell_core/           # The "Security Engine" (Keep as is)
+│   ├── bot/
+│   │   ├── middleware.py            # Bot protection middleware
+│   │   ├── telemetry.py             # Request telemetry extraction
+│   │   ├── fingerprint.py           # (Planned) client fingerprinting
+│   │   ├── scoring.py               # (Planned) bot scoring engine
+│   │   ├── decision.py              # (Planned) enforcement logic
+│   │   ├── response.py              # (Planned) bot responses
+│   ├── waf/
+│   └── engine.py                    # WAF rule engine & evaluation
 │   └── rules/
-│       └── core_rules.py        # WAF legit test rules
-│       └── owasp_2025_rules.py  # WAF TOP 10 OWASP rules
-│
-├── logparser/
-│   └── log_analizer.py          # HTTP normalization and logging
-│
-├── tests/
-│   ├── test_cases.py            # Legit and malicious test cases
-│   └── run_security_tests.py    # Automated security tests
-│
-├── starshell_playground/                  # 🎮 THE APP (The new backend & frontend)
-│   ├── backend/                 # FastAPI (starshell_playground-specific routes)
-│   ├── frontend/                # React/Vite (UI)
-│   └── docker-compose.yml
-├── http_events_log.jsonl        # Structured HTTP security logs
-├── requirements.txt
-├── LICENSE
-└── README.md
+│       └── core_rules.py            # WAF legit test rules
+│       └── owasp_2025_rules.py      # WAF TOP 10 OWASP rules
+│   ├── gateway/
+│       └── oerimeter_gateway.py
+│   ├── logparser/
+│       └── log_analizer.py          # HTTP normalization and logging
+│   └── tests/                       # Security Scenarios & Test Runner
+├── starshell_playground/            # The "Live Environment"
+│   ├── backend/                     # FastAPI Logic
+│   │   ├── api/                     # Routers (mgmt, target_app, etc.)
+│   │   ├── core/                    # Logic (Storage, Adapter)
+│   │   └── main.py
+│   └── frontend/                    # React source code
+├── data/
+│   └── http_events_log.jsonl 
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
 ## 🛡️ Bot Protection Layer
