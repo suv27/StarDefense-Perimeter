@@ -2,8 +2,9 @@ import re
 import json
 import logging
 from typing import Dict, List
-from star_defense.waf.rules.core_rules import CoreRules
-from star_defense.waf.rules.signature_database import SignatureDB
+from starlette.middleware.base import BaseHTTPMiddleware
+from starshell_core.waf.rules.core_rules import CoreRules
+from starshell_core.waf.rules.signature_database import SignatureDB
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -48,8 +49,8 @@ class WAFProtectionMiddleware:
                         "matched_value": search_string[:200]
                     })
 
-        print(f"DEBUG: Matches found: {len(matches)}")
         decision = self.make_decision(matches)
+        logger.info(f"DEBUG: Matches found: {len(matches)}")
         logger.info(f"/WAFProtectionMiddleware Decision: {decision['action']}")
         return decision
 

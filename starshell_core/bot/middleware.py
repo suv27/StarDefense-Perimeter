@@ -1,7 +1,7 @@
-# star_defense/bot_protection/middleware.py
+# starshell_core/bot/middleware.py
 
 from fastapi import Request
-from star_defense.bot_protection.telemetry import TelemetryExtractor
+from starshell_core.bot.telemetry import TelemetryExtractor
 from fastapi.responses import JSONResponse
 
 class BotProtectionMiddleware:
@@ -34,7 +34,7 @@ class BotProtectionMiddleware:
         if is_bot:
             response = JSONResponse(
                 status_code=403,
-                content={"detail": "Bot blocked by StarDefense"}
+                content={"detail": "Bot blocked by StarShell"}
             )
             await response(scope, receive, send)
             return

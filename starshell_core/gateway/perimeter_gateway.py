@@ -1,4 +1,4 @@
-# star_defense/api/perimeter_gateway.py
+# starshell_core/gateway/perimeter_gateway.py
 
 import uvicorn
 import httpx
@@ -7,11 +7,11 @@ import json
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
-from star_defense.bot_protection.telemetry import TelemetryExtractor
-from star_defense.waf.middleware import WAFProtectionMiddleware
-from star_defense.logparser.log_analizer import LogAnalizer
+from starshell_core.bot.telemetry import TelemetryExtractor
+from starshell_core.waf.middleware import WAFProtectionMiddleware
+from starshell_core.logparser.log_analizer import LogAnalizer
 
-app = FastAPI(title="StarDefense Perimeter Gateway")
+app = FastAPI(title="StarShell Perimeter Gateway")
 waf = WAFProtectionMiddleware()
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8080")
@@ -27,7 +27,7 @@ async def security_logic(request: Request, call_next):
     is_bot = not ua or "curl" in ua.lower() or "python-requests" in ua.lower()
     
     if is_bot:
-        return JSONResponse(status_code=403, content={"message": "Bot blocked by StarDefense"})
+        return JSONResponse(status_code=403, content={"message": "Bot blocked by StarShell"})
 
     # --- 2. WAF CHECK ---
     log_analyzer = LogAnalizer(httpRequestData=request)
@@ -41,11 +41,15 @@ async def security_logic(request: Request, call_next):
     # --- 3. PROXY (The Tunnel) ---
     path = request.url.path
     method = request.method
-    headers = dict(request.headers)
-    headers.pop("host", None)
-    headers["X-StarDefense-Verified"] = "True"
 
     try:
+
+        headers = dict(request.headers)
+        headers.pop("host", None)
+        headers["X-StarShell-Verified"] = "True"
+        headers["X-StarShell-WAF-Decision"] = json.dumps(waf_decision)
+        headers["X-StarShell-Bot-Score"] = str(telemetry.get("score", 0))
+
         # Use the captured body from the payload to avoid re-reading the stream
         sent_body = payload.get("body")
         
@@ -72,4 +76,4 @@ async def security_logic(request: Request, call_next):
         return JSONResponse(status_code=502, content={"message": f"Proxy Error: {str(e)}"})
 
 if __name__ == "__main__":
-    uvicorn.run("star_defense.api.perimeter_gateway:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("starshell_core.gateway.perimeter_gateway:app", host="0.0.0.0", port=8000, reload=True)

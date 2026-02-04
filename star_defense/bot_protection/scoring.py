@@ -1,1 +1,0 @@
-# star_defense/bot_protection/scoring.py

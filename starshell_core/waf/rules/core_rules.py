@@ -1,6 +1,6 @@
 class CoreRules:
     def load_legit_rules():
-        return [
+        rules = [
             {
                 "id": "LEGIT-001",
                 "name": "Valid Email Address",
@@ -47,3 +47,5 @@ class CoreRules:
                 "action": "ALLOW"
             }
         ]
+        
+        return rules

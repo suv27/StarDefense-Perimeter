@@ -1,4 +1,4 @@
-# star_defense/bot_protection/telemetry.py
+# starshell_core/bot/telemetry.py
 
 from fastapi import Request
 import time

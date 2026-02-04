@@ -1,4 +1,4 @@
-# star_defense/logparser/log_analizer.py
+# starshell_core/logparser/log_analizer.py
 
 import logging
 import json

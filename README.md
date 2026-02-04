@@ -1,6 +1,6 @@
-# ⭐ StarDefense Perimeter
+# ⭐ StarShell Perimeter
 
-**StarDefense Perimeter** is a **Layer 7 Cloud Security / Perimeter Defense project** built with **Python and FastAPI**, designed to simulate how modern **Web Application Firewalls (WAF)** and **Bot Protection platforms** operate in real-world cloud environments.
+**StarShell Perimeter** is a **Layer 7 Cloud Security / Perimeter Defense project** built with **Python and FastAPI**, designed to simulate how modern **Web Application Firewalls (WAF)** and **Bot Protection platforms** operate in real-world cloud environments.
 
 This project focuses on **HTTP traffic inspection, security telemetry collection, attack detection, and policy enforcement** using a middleware-based architecture — similar in concept to **Cloudflare, Akamai, AWS WAF, and Shape Security**.
 
@@ -8,7 +8,7 @@ This project focuses on **HTTP traffic inspection, security telemetry collection
 
 ## The Entire “IDEA”
 
-The goal of StarDefense is to **protect backend APIs by placing security controls in front of application logic**, not inside it.
+The goal of StarShell is to **protect backend APIs by placing security controls in front of application logic**, not inside it.
 
 ### Request Flow (Current Implementation)
 
@@ -26,7 +26,7 @@ The goal of StarDefense is to **protect backend APIs by placing security control
 
 ---
 
-## How to Run StarDefense Backend Server
+## How to Run StarShell Backend Server
 
 ### 1. Install Dependencies
 ```bash
@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
 ### 2. Start the FastAPI Server
 ```bash
-fastapi dev star_defense/api/backend_apis.py
+fastapi dev starshell_core/gateway/backend_apis.py
 ```
 
 ### 3. Open Fast API Documentation
@@ -61,11 +61,11 @@ If the request is blocked, the server will return 403 Forbidden along with WAF o
 
 ### Project Structure
 ```bash
-star_defense/
+starshell_core/
 ├── api/
 │   └── backend_apis.py          # FastAPI application entry point
 │
-├── bot_protection/
+├── bot/
 │   ├── middleware.py            # Bot protection middleware
 │   ├── telemetry.py             # Request telemetry extraction
 │   ├── fingerprint.py           # (Planned) client fingerprinting
@@ -86,7 +86,11 @@ star_defense/
 │   ├── test_cases.py            # Legit and malicious test cases
 │   └── run_security_tests.py    # Automated security tests
 │
-├── http_events_log.jsonl          # Structured HTTP security logs
+├── starshell_playground/                  # 🎮 THE APP (The new backend & frontend)
+│   ├── backend/                 # FastAPI (starshell_playground-specific routes)
+│   ├── frontend/                # React/Vite (UI)
+│   └── docker-compose.yml
+├── http_events_log.jsonl        # Structured HTTP security logs
 ├── requirements.txt
 ├── LICENSE
 └── README.md
@@ -219,7 +223,7 @@ This simulates **enterprise-grade security testing pipelines** commonly used in 
 
 ## 🚀 Why This Project Matters
 
-StarDefense demonstrates **real-world perimeter security engineering concepts**, including:
+StarShell demonstrates **real-world perimeter security engineering concepts**, including:
 
 - Middleware-based Layer 7 traffic interception
 - Clear separation of **detection**, **scoring**, and **enforcement**
@@ -228,7 +232,7 @@ StarDefense demonstrates **real-world perimeter security engineering concepts**,
 - Cloud-native security design patterns inspired by enterprise platforms
 
 This is **not a toy WAF**.  
-StarDefense is intentionally structured to resemble **production-grade security architectures** used in modern cloud environments.
+StarShell is intentionally structured to resemble **production-grade security architectures** used in modern cloud environments.
 
 ---
 

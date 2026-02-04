@@ -144,7 +144,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-StarDefense-Perimeter-Env/
+StarShell/
 
 # Spyder project settings
 .spyderproject

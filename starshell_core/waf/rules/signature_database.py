@@ -1,9 +1,9 @@
-# star_defense/waf/rules/signature_database.py
+# starshell_core/waf/rules/signature_database.py
 
 class SignatureDB:
     @staticmethod
     def load_owasp_2025_rules():
-        return [
+        rules = [
             {
                 "id": "WAF-001",
                 "name": "Broken Access Control",
@@ -77,3 +77,4 @@ class SignatureDB:
                 "targets": ["body", "query_string"]
             }
         ]
+        return rules

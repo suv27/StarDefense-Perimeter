@@ -1,4 +1,4 @@
-# star_defense/tests/security_scenarios.py
+# starshell_core/tests/security_scenarios.py
 
 class TestCases:
     @staticmethod
@@ -28,7 +28,7 @@ class TestCases:
     def load_waf_test_cases():
         default_headers = {
             "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) StarDefense/1.1"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) StarShell/1.1"
         }
         return [
             # ==================================================
