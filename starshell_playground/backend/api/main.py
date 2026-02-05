@@ -26,7 +26,14 @@ def handle_security_event(request: Request, payload: dict):
 async def process_simulation(request: Request):
     insight = SecurityAdapter.capture_decision(request)
     
-    EventStore.add_event(insight, request.body)
+    body_data = {}
+    if request.method == "POST":
+        try:
+            body_data = await request.json()
+        except:
+            body_data = {"raw": (await request.body()).decode()}
+
+    EventStore.add_event(insight, body_data)
     
     return {
         "message": "Simulation Processed",
@@ -35,9 +42,7 @@ async def process_simulation(request: Request):
         "verdict": insight["verdict"]
     }
 
-@app.get("/history")
-async def get_history():
-    return EventStore.get_all()
+
 
 @app.post("/api/target-app/login")
 async def login(request: Request, data: dict = Body(...)):
@@ -62,8 +67,16 @@ async def get_stats():
 
 @app.get("/api/management/signatures")
 async def get_signatures():
-    """Returns the OWASP 2025 rule set for the UI to display."""
     return SignatureDB.load_owasp_2025_rules()
+
+@app.get("/api/management/history")
+async def get_history():
+    return EventStore.get_all()
+
+@app.delete("/api/management/history")
+async def clear_history():
+    EventStore.clear()
+    return {"message": "Playground history reset"}
 
 @app.get("/api/health")
 async def health_check():
