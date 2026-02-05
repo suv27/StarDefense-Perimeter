@@ -1,0 +1,75 @@
+# starshell_playground/backend/api/main.py
+
+from fastapi import FastAPI, Request, APIRouter, Body
+from fastapi.middleware.cors import CORSMiddleware
+from starshell_playground.backend.core.storage import EventStore
+from starshell_playground.backend.core.adapter import SecurityAdapter
+from starshell_core.waf.rules.signature_database import SignatureDB
+
+app = FastAPI(title="StarShell Security Playground")
+app.add_middleware(
+    CORSMiddleware,      # Enable CORS so your future Frontend (React/Vue) can talk to this API
+    allow_origins=["*"], # In production, we'll restrict this
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+router = APIRouter()
+
+def handle_security_event(request: Request, payload: dict):
+    """Internal helper to log the event and return the decision."""
+    insight = SecurityAdapter.capture_decision(request)
+    EventStore.add_event(insight, payload)
+    return insight
+
+@router.api_route("/api/simulate/request", methods=["GET", "POST"])
+async def process_simulation(request: Request):
+    insight = SecurityAdapter.capture_decision(request)
+    
+    EventStore.add_event(insight, request.body)
+    
+    return {
+        "message": "Simulation Processed",
+        "waf": insight["waf_layer"],
+        "bot": insight["bot_layer"],
+        "verdict": insight["verdict"]
+    }
+
+@app.get("/history")
+async def get_history():
+    return EventStore.get_all()
+
+@app.post("/api/target-app/login")
+async def login(request: Request, data: dict = Body(...)):
+    insight = handle_security_event(request, data)
+    return {"message": "Login processed", "security": insight}
+
+@app.post("/api/target-app/submit-ticket")
+async def ticket(request: Request, data: dict = Body(...)):
+    insight = handle_security_event(request, data)
+    return {"message": "Ticket received", "security": insight}
+
+@app.get("/api/target-app/search")
+async def search(request: Request):
+    params = dict(request.query_params)
+    insight = handle_security_event(request, params)
+    return {"results": [], "security": insight}
+
+@app.get("/api/management/stats")
+async def get_stats():
+    """Returns aggregated data for the dashboard charts."""
+    return EventStore.get_stats()
+
+@app.get("/api/management/signatures")
+async def get_signatures():
+    """Returns the OWASP 2025 rule set for the UI to display."""
+    return SignatureDB.load_owasp_2025_rules()
+
+@app.get("/api/health")
+async def health_check():
+    return {
+        "status": "online",
+        "engine": "StarShell v1.2",
+        "layers": ["BOT", "WAF", "LogParser"]
+    }
+
