@@ -5,7 +5,7 @@ import requests
 import starshell_core.tests.security_scenarios as scenarios
 
 
-BASE_URL = "http://127.0.0.1:8000/api/target-app/login"
+BASE_URL = "http://127.0.0.1:8000/api/simulate/request"
 
 # Terminal Colors
 C_GREEN = "\033[92m"

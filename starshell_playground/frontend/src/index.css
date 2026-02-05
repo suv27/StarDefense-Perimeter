@@ -1,0 +1,96 @@
+/* 1. Use the new Tailwind v4 entry point */
+@import "tailwindcss";
+
+/* 2. Setup your Elite Theme Variables (Tailwind v4 style) */
+@theme {
+  --color-defense-dark: #0a0f18;
+  --color-defense-card: #111827;
+  --color-defense-accent: #06b6d4;
+  
+  /* Ensuring custom font is recognized */
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+}
+
+/* 3. Global Atmospheric Depth */
+@layer base {
+  body {
+    background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+    @apply text-slate-200 antialiased overflow-x-hidden min-h-screen font-mono;
+  }
+}
+
+/* 4. Functional Tactical Utilities */
+@layer utilities {
+  /* Elite Glassmorphism HUD Panel */
+  .glass-panel {
+    background-color: rgb(15 23 42 / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Neon Glow FX */
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5), 0 0 20px rgba(34, 211, 238, 0.2);
+  }
+
+  .text-glow-red {
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.2);
+  }
+
+  /* Tactical Scanline Overlay for Live Feed */
+  .scanline {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(6, 182, 212, 0.02) 50%
+    );
+    background-size: 100% 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 10;
+    animation: scroll-v4 20s linear infinite;
+  }
+
+  @keyframes scroll-v4 {
+    from { background-position: 0 0; }
+    to { background-position: 0 100%; }
+  }
+
+  /* Intercept Pulse FX */
+  .pulse-glow {
+    animation: pulse-v4 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-v4 {
+    0%, 100% { 
+      opacity: 1; 
+      transform: scale(1); 
+      box-shadow: 0 0 0px rgba(239, 68, 68, 0);
+    }
+    50% { 
+      opacity: 0.4; 
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+  }
+
+  /* Custom Scrollbar for the Live Feed */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(6, 182, 212, 0.2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.5);
+  }
+}

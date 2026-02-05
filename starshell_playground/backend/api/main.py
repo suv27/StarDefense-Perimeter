@@ -1,6 +1,7 @@
 # starshell_playground/backend/api/main.py
 
 from fastapi import FastAPI, Request, APIRouter, Body
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starshell_playground.backend.core.storage import EventStore
 from starshell_playground.backend.core.adapter import SecurityAdapter
@@ -12,37 +13,18 @@ app.add_middleware(
     allow_origins=["*"], # In production, we'll restrict this
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 router = APIRouter()
 
-def handle_security_event(request: Request, payload: dict):
-    """Internal helper to log the event and return the decision."""
+@app.api_route("/api/simulate/request", methods=["GET", "POST"])
+async def handle_security_event(request: Request):
     insight = SecurityAdapter.capture_decision(request)
-    EventStore.add_event(insight, payload)
+    EventStore.add_event(insight, {})
+    if insight["verdict"] == "BLOCK":
+        return JSONResponse(status_code=403, content={"message": "Bot blocked by StarShell"})
     return insight
-
-@router.api_route("/api/simulate/request", methods=["GET", "POST"])
-async def process_simulation(request: Request):
-    insight = SecurityAdapter.capture_decision(request)
-    
-    body_data = {}
-    if request.method == "POST":
-        try:
-            body_data = await request.json()
-        except:
-            body_data = {"raw": (await request.body()).decode()}
-
-    EventStore.add_event(insight, body_data)
-    
-    return {
-        "message": "Simulation Processed",
-        "waf": insight["waf_layer"],
-        "bot": insight["bot_layer"],
-        "verdict": insight["verdict"]
-    }
-
-
 
 @app.post("/api/target-app/login")
 async def login(request: Request, data: dict = Body(...)):
