@@ -31,11 +31,13 @@ The goal of StarShell is to **protect backend APIs by placing security controls 
 ### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
+npm install
 ```
 
 ### 2. Start the FastAPI Server
 ```bash
 fastapi dev starshell_core/gateway/backend_apis.py
+npm run dev
 ```
 
 ### 3. Open Fast API Documentation
@@ -188,35 +190,73 @@ This simulates **enterprise-grade security testing pipelines** commonly used in 
 
 ## Architecture Diagram
 ```bash
-         Client / Frontend
-                |
-                v
-┌───────────────────────────────┐
-│     Bot Protection Layer      │
-│ - Telemetry Extraction        │
-│ - Bot Signal Detection        │
-└───────────────┬───────────────┘
-                |
-                v
-┌───────────────────────────────┐
-│        WAF Layer              │
-│ - Request Normalization       │
-│ - OWASP Signature Detection   │
-│ - Allow / Block Decisions     │
-└───────────────┬───────────────┘
-                |
-                v
-┌───────────────────────────────┐
-│      FastAPI Backend APIs     │
-│ - /status                     │
-│ - /login                      │
-└───────────────┬───────────────┘
-                |
-                v
-┌───────────────────────────────┐
-│ Logs / Future Dashboard / SIEM│
-└───────────────────────────────┘
+                   [ ADVERSARIAL SANDBOX ]
+                 Frontend (React + Tailwind v4)
+                 ┌───────────────────────────┐
+                 │     Simulation Engine     │ <─── Adjust Risk Parameters
+                 │  (Zero-Infra Detection)   │
+                 └─────────────┬─────────────┘
+                               │
+                HTTP REQUEST (Live or Simulated)
+                               │
+                               v
+┌──────────────────────────────────────────────────────────────┐
+│                 STARSHELL PERIMETER GATEWAY                  │
+│         (Middleware Interception & Enforcement)              │
+│                                                              │
+│  ┌────────────────────────┐      ┌────────────────────────┐  │
+│  │  Bot Protection Layer  │      │       WAF Layer        │  │
+│  │ - Telemetry Extraction │ ───> │ - Normalization        │  │
+│  │ - Behavioral Scoring   │      │ - Signature Inspection │  │
+│  └───────────┬────────────┘      └───────────┬────────────┘  │
+│              │                               │               │
+│              └───────────────┬───────────────┘               │
+│                              │                               │
+│                    [ VERDICT DECISION ]                      │
+│                    /                  \                      │
+│             IF "BLOCK"              IF "ALLOW"               │
+│                  |                      |                    │
+└──────────────────┼──────────────────────┼────────────────────┘
+                   │                      │
+                   v                      v
+         ┌──────────────────┐    ┌───────────────────────────┐
+         │  403 FORBIDDEN   │    │      FastAPI Backend APIs │
+         │ (Threat Blocked) │    │ - Protected Endpoints     │
+         └──────────────────┘    └──────────────┬────────────┘
+                   │                            │
+                   └─────────────┬──────────────┘
+                                 v
+                  ┌───────────────────────────────┐
+                  │  Security Telemetry Bus       │
+                  │ - JSONL Event Logging         │
+                  │ - Real-time Dashboard Feed    │
+                  └───────────────────────────────┘
 ```
+
+## 🖥️ The Elite HUD Frontend
+
+The StarShell Frontend is a "Zero-Infrastructure" security dashboard that mimics an enterprise-grade Command Center. It allows you to act as a "Bot Architect" to test the resilience of the perimeter in an interactive adversarial sandbox.
+
+### Key Frontend Features
+* **Zero-Infrastructure Simulation**: A state-machine logic engine that processes attack profiles locally in the browser, simulating WAF logic without requiring a live backend for the playground.
+* **Real-Time Risk Scoring**: A dynamic SVG-based semi-circular gauge that calculates threat levels (Behavioral, Pattern, or Signature) based on live input.
+* **Tactical Live Feed**: A glowing "Defense Live Stream" featuring scanline overlays and pulse-animations that intercept and display simulated traffic cards.
+* **Bot Profile Configuration**: Interactive sliders to adjust Requests Per Second (RPS), User-Agent signatures, and path targeting.
+* **Elite HUD Aesthetic**: Built with **Tailwind CSS v4**, utilizing glassmorphism, radial depth gradients, and high-contrast monospace typography.
+
+---
+
+## 🛠️ Integrated Tech Stack
+
+### Backend
+* **Core**: Python 3.10+, FastAPI
+* **Security Logic**: Middleware-based L7 Interception
+* **Ruleset**: OWASP Top 10: 2025 Mapping
+
+### Frontend
+* **Framework**: React 18 (Vite)
+* **Styling**: Tailwind CSS v4.0 (Engineered with new @theme variables and @import "tailwindcss" syntax)
+* **State Management**: Functional Hooks & Effect Heartbeats for real-time traffic simulation
 
 ## 🚀 Why This Project Matters
 
